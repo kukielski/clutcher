@@ -141,3 +141,89 @@ h1.standout {
     transform: rotate(360deg);
   }
 }
+
+/* Hide hamburger by default */
+.hamburger {
+  display: none;
+}
+
+/* Show hamburger only on mobile screens */
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1001;
+    background: #a11503;         /* Inverted: dark background */
+    border: none;
+    border-radius: 50%;
+    width: 84px;                 /* 56px * 1.5 = 84px */
+    height: 84px;                /* 56px * 1.5 = 84px */
+    box-shadow: 0 4.2px 25.2px rgba(0,0,0,0.2625), 0 1.575px 4.2px rgba(0,0,0,0.189);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 9px;                    /* 6px * 1.5 = 9px */
+    cursor: pointer;
+    padding: 0;
+  }
+  .hamburger span {
+    display: block;
+    width: 42px;
+    height: 6px;
+    background: #fff;
+    border-radius: 3px;
+    transition: all 0.3s;
+    position: relative;
+  }
+  .hamburger.open span:nth-child(1) {
+    transform: translateY(15px) rotate(45deg);
+  }
+  .hamburger.open span:nth-child(2) {
+    opacity: 0;
+  }
+  .hamburger.open span:nth-child(3) {
+    transform: translateY(-15px) rotate(-45deg);
+  }
+}
+
+/* Responsive nav for mobile */
+@media (max-width: 768px) {
+  .App-nav {
+    display: none;
+    position: fixed;
+    bottom: 140px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #a11503;           /* Inverted: dark background */
+    color: #fff;                   /* Inverted: light text */
+    border-radius: 20px;           /* Slightly larger radius */
+    box-shadow: 0 2.5px 20px rgba(0,0,0,0.18);
+    padding: 1.25em 2.5em;         /* 25% larger padding */
+    font-size: 1.25em;             /* 25% larger font */
+    z-index: 1000;
+    min-width: 250px;              /* Optional: make menu wider */
+  }
+  .App-nav.open {
+    display: block;
+  }
+  .App-nav ul {
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;                     /* Slightly larger gap */
+    display: flex;
+    padding: 0;
+    margin: 0;
+  }
+  .App-nav a,
+  .App-nav .nav-link {
+    color: #fff !important;        /* Force light text for links */
+    font-size: 1.1em;
+  }
+  .App-nav .nav-link.active {
+    color: #ffe6e0 !important;     /* Slightly lighter for active */
+    border-bottom: 2px solid #fff;
+  }
+}

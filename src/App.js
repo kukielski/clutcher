@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import './App.css';
 import logo from './SweetVanilla_alpha.PNG';
@@ -17,17 +17,21 @@ function AppHomeContent() {
 
 function App() {
   const location = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   // Helper to check if a route is active
   const isActive = (path) => location.pathname === path;
 
+  // Hide nav on mobile unless menuOpen is true
+  const navClass = menuOpen ? "App-nav open" : "App-nav";
+
   return (
     <div className="App">
       <header className="App-header">
-        <nav className="App-nav">
+        <nav className={navClass}>
           <ul>
             <li>
-              <Link to="/">
+              <Link to="/" onClick={() => setMenuOpen(false)}>
                 <img src={`${process.env.PUBLIC_URL}/favicon.ico`} alt="logo" className="App-nav-logo" />
               </Link>
             </li>
@@ -35,6 +39,7 @@ function App() {
               <Link
                 to="/products"
                 className={isActive('/products') ? 'nav-link active' : 'nav-link'}
+                onClick={() => setMenuOpen(false)}
               >
                 Products
               </Link>
@@ -43,6 +48,7 @@ function App() {
               <Link
                 to="/videos"
                 className={isActive('/videos') ? 'nav-link active' : 'nav-link'}
+                onClick={() => setMenuOpen(false)}
               >
                 Videos
               </Link>
@@ -51,12 +57,23 @@ function App() {
               <Link
                 to="/about"
                 className={isActive('/about') ? 'nav-link active' : 'nav-link'}
+                onClick={() => setMenuOpen(false)}
               >
                 About
               </Link>
             </li>
           </ul>
         </nav>
+        {/* Hamburger icon for mobile */}
+        <button
+          className={`hamburger${menuOpen ? ' open' : ''}`}
+          aria-label="Toggle menu"
+          onClick={() => setMenuOpen((open) => !open)}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
       </header>
       {location.pathname === '/' && <AppHomeContent />}
       <Routes>
