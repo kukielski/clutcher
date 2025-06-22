@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import './App.css';
-import logo from './SweetVanilla_alpha.PNG';
+import logo from './socrateasy.png';
 import AboutPage from './routes/AboutPage';
-import ProductsPage from './routes/ProductsPage';
+import ContentPage from './routes/ContentPage';
 import VideosPage from './routes/VideosPage';
+// import HomePage from './pages/HomePage';
 
 function AppHomeContent() {
   return (
@@ -37,11 +38,11 @@ function App() {
             </li>
             <li>
               <Link
-                to="/products"
-                className={isActive('/products') ? 'nav-link active' : 'nav-link'}
+                to="/content"
+                className={isActive('/content') ? 'nav-link active' : 'nav-link'}
                 onClick={() => setMenuOpen(false)}
               >
-                Products
+                Content
               </Link>
             </li>
             <li>
@@ -77,8 +78,9 @@ function App() {
       </header>
       {location.pathname === '/' && <AppHomeContent />}
       <Routes>
+        {/* <Route path="/" element={<HomePage />} /> */}
         <Route path="/about" element={<AboutPage />} />
-        <Route path="/products" element={<ProductsPage />} />
+        <Route path="/content" element={<ContentPage />} />
         <Route path="/videos" element={<VideosPage />} />
       </Routes>
     </div>

@@ -1,9 +1,15 @@
+:root {
+  --main-color: rgb(0,0,128);
+  --main-color-light: rgba(0, 0, 128, 0.65);
+  --secondary-color: rgb(64, 224, 208);
+}
+
 body, .App {
   margin: 0;
   padding: 0;
   width: 100%;
   overflow-x: hidden; /* Prevent horizontal scrolling */
-  color: rgb(161, 21, 3);
+  color: var(--main-color);;
 }
 
 h1.standout {
@@ -15,7 +21,7 @@ h1.standout {
 }
 
 .App-logo {
-  height: auto; /* Maintain aspect ratio */
+  height: 50vh; /* Maintain aspect ratio */
   margin: 5em auto 3em auto; /* Center the logo */
   pointer-events: none;
   max-width: 50%; /* Prevent overflow */
@@ -87,8 +93,8 @@ h1.standout {
 
 /* Ensure no border-bottom is applied to the logo */
 .App-nav a:hover {
-  color: rgba(187, 38, 18, 0.7); /* Make the color lighter */
-  border-bottom: 2px solid rgb(161, 21, 3); /* Add a bottom border */
+  color: var(--main-color-light);; /* Make the color lighter */
+  border-bottom: 2px solid var(--main-color);; /* Add a bottom border */
 }
 
 .App-nav li:first-child :hover {
@@ -128,8 +134,8 @@ h1.standout {
 }
 
 .nav-link.active {
-  color: rgb(161, 21, 3); /* darker color for active */
-  border-bottom: 2px solid rgb(161, 21, 3);
+  color: var(--main-color);; /* darker color for active */
+  border-bottom: 2px solid var(--main-color);;
   font-weight: bold;
 }
 
