@@ -31,9 +31,18 @@ function App() {
       <header className="App-header">
         <nav className={navClass}>
           <ul>
-            <li>
+            {/* <li>
               <Link to="/" onClick={() => setMenuOpen(false)}>
                 <img src={`${process.env.PUBLIC_URL}/favicon.ico`} alt="logo" className="App-nav-logo" />
+              </Link>
+            </li> */}
+            <li>
+              <Link
+                to="/about"
+                className={isActive('/about') ? 'nav-link active' : 'nav-link'}
+                onClick={() => setMenuOpen(false)}
+              >
+                About
               </Link>
             </li>
             <li>
@@ -45,7 +54,7 @@ function App() {
                 Content
               </Link>
             </li>
-            <li>
+            {/* <li>
               <Link
                 to="/videos"
                 className={isActive('/videos') ? 'nav-link active' : 'nav-link'}
@@ -53,16 +62,7 @@ function App() {
               >
                 Videos
               </Link>
-            </li>
-            <li>
-              <Link
-                to="/about"
-                className={isActive('/about') ? 'nav-link active' : 'nav-link'}
-                onClick={() => setMenuOpen(false)}
-              >
-                About
-              </Link>
-            </li>
+            </li> */}
           </ul>
         </nav>
         {/* Hamburger icon for mobile */}
