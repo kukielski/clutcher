@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
 import './App.css';
 import logo from './socrateasy.png';
 import AboutPage from './routes/AboutPage';
 import ContentPage from './routes/ContentPage';
 import VideosPage from './routes/VideosPage';
-// import HomePage from './pages/HomePage';
+import LessonsPage from './routes/LessonsPage';
+import CampaignsPage from './routes/CampaignsPage';
 
 function AppHomeContent() {
   return (
@@ -20,8 +21,8 @@ function App() {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Helper to check if a route is active
-  const isActive = (path) => location.pathname === path;
+  // Helper to check if a route is active (works for subroutes)
+  const isActive = (path) => location.pathname === path || location.pathname.startsWith(path + '/');
 
   // Hide nav on mobile unless menuOpen is true
   const navClass = menuOpen ? "App-nav open" : "App-nav";
@@ -31,11 +32,6 @@ function App() {
       <header className="App-header">
         <nav className={navClass}>
           <ul>
-            {/* <li>
-              <Link to="/" onClick={() => setMenuOpen(false)}>
-                <img src={`${process.env.PUBLIC_URL}/favicon.ico`} alt="logo" className="App-nav-logo" />
-              </Link>
-            </li> */}
             <li>
               <Link
                 to="/about"
@@ -54,18 +50,8 @@ function App() {
                 Content
               </Link>
             </li>
-            {/* <li>
-              <Link
-                to="/videos"
-                className={isActive('/videos') ? 'nav-link active' : 'nav-link'}
-                onClick={() => setMenuOpen(false)}
-              >
-                Videos
-              </Link>
-            </li> */}
           </ul>
         </nav>
-        {/* Hamburger icon for mobile */}
         <button
           className={`hamburger${menuOpen ? ' open' : ''}`}
           aria-label="Toggle menu"
@@ -78,10 +64,14 @@ function App() {
       </header>
       {location.pathname === '/' && <AppHomeContent />}
       <Routes>
-        {/* <Route path="/" element={<HomePage />} /> */}
+        <Route path="/" element={<Navigate to="/about" />} /> {/* Default to About */}
         <Route path="/about" element={<AboutPage />} />
-        <Route path="/content" element={<ContentPage />} />
         <Route path="/videos" element={<VideosPage />} />
+        <Route path="/content" element={<ContentPage />}>
+          <Route path="lessons" element={<LessonsPage />} />
+          <Route path="campaigns" element={<CampaignsPage />} />
+        </Route>
+        <Route path="*" element={<Navigate to="/about" />} />
       </Routes>
     </div>
   );
