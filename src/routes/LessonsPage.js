@@ -1,25 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 import './ContentPage.css';
 import './LessonPage.css';
 
-const HOST = process.env.REACT_APP_HOST;
 const APP_KEY = process.env.REACT_APP_APP_KEY;
-const APP_TOKEN = process.env.REACT_APP_APP_TOKEN;
 
 export default function LessonsPage() {
+    const { host, token, updateCreds } = useContext(AuthContext);
     const [lessons, setLessons] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [search, setSearch] = useState("");
 
     useEffect(() => {
+        if (!host || !token) return;
         async function fetchAll() {
             try {
-                const teamsRes = await fetch(`${HOST}/api/teams`, {
+                const teamsRes = await fetch(`${host}/api/teams`, {
                     headers: {
                         "x-conveyour-appkey": APP_KEY,
-                        "x-conveyour-token": APP_TOKEN,
+                        "x-conveyour-token": token,
                     },
                 });
                 if (!teamsRes.ok) throw new Error("Failed to fetch teams");
@@ -27,10 +28,10 @@ export default function LessonsPage() {
                 const teams = Array.isArray(teamsData.data) ? teamsData.data : [];
 
                 const lessonFetches = [
-                    fetch(`${HOST}/api/lessons`, {
+                    fetch(`${host}/api/lessons`, {
                         headers: {
                             "x-conveyour-appkey": APP_KEY,
-                            "x-conveyour-token": APP_TOKEN,
+                            "x-conveyour-token": token,
                         },
                     }).then(res => res.json()).then(data => ({
                         teamLabel: "No Team",
@@ -38,10 +39,10 @@ export default function LessonsPage() {
                         lessons: Array.isArray(data.data) ? data.data : [],
                     })),
                     ...teams.map(team => {
-                        return fetch(`${HOST}/api/lessons?teams=${team.id}`, {
+                        return fetch(`${host}/api/lessons?teams=${team.id}`, {
                             headers: {
                                 "x-conveyour-appkey": APP_KEY,
-                                "x-conveyour-token": APP_TOKEN,
+                                "x-conveyour-token": token,
                             },
                         })
                             .then(res => res.json())
@@ -72,10 +73,39 @@ export default function LessonsPage() {
         }
 
         fetchAll();
-    }, []);
+    }, [host, token]);
+
+    if (!host || !token) {
+        return <div>Please reload and enter your domain and APP_TOKEN.</div>;
+    }
 
     if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error}</div>;
+    if (error) return (
+        <div>
+            Error: {error}
+            <button
+                onClick={updateCreds}
+                style={{
+                    background: "#2d72d9",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "4px",
+                    padding: "4px 16px",
+                    fontSize: "1rem",
+                    fontWeight: 500,
+                    cursor: "pointer",
+                    height: "32px",
+                    lineHeight: "24px",
+                    minWidth: "unset",
+                    boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
+                    display: "inline-block",
+                    marginTop: "1rem"
+                }}
+            >
+                Update Domain or Token
+            </button>
+        </div>
+    );
 
     const sortedLessons = [...lessons].sort((a, b) => {
         if (a.teamLabel === "No Team" && b.teamLabel !== "No Team") return -1;
@@ -103,6 +133,28 @@ export default function LessonsPage() {
     return (
         <div>
             <h2>Lessons by Team</h2>
+            <div style={{ marginBottom: "1rem" }}>
+                <button
+                    onClick={updateCreds}
+                    style={{
+                        background: "#2d72d9",
+                        color: "#fff",
+                        border: "none",
+                        borderRadius: "4px",
+                        padding: "4px 16px",
+                        fontSize: "1rem",
+                        fontWeight: 500,
+                        cursor: "pointer",
+                        height: "32px",
+                        lineHeight: "24px",
+                        minWidth: "unset",
+                        boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
+                        display: "inline-block",
+                    }}
+                >
+                    Update Domain or Token
+                </button>
+            </div>
             <input
                 type="text"
                 placeholder="Search lessons or teams..."
@@ -130,7 +182,7 @@ export default function LessonsPage() {
                                     </td>
                                     <td>
                                         <a
-                                            href={`${HOST}/lessons/edit/${lesson.id}`}
+                                            href={`${host}/lessons/edit/${lesson.id}`}
                                             target="_blank"
                                             rel="noreferrer"
                                         >
