@@ -6,6 +6,7 @@ import AboutPage from './routes/AboutPage';
 import ContentPage from './routes/ContentPage';
 import VideosPage from './routes/VideosPage';
 import LessonsPage from './routes/LessonsPage';
+import LessonPage from './routes/LessonPage';
 import CampaignsPage from './routes/CampaignsPage';
 
 function AppHomeContent() {
@@ -69,6 +70,7 @@ function App() {
         <Route path="/videos" element={<VideosPage />} />
         <Route path="/content" element={<ContentPage />}>
           <Route path="lessons" element={<LessonsPage />} />
+          <Route path="lessons/:lessonId" element={<LessonPage />} />
           <Route path="campaigns" element={<CampaignsPage />} />
         </Route>
         <Route path="*" element={<Navigate to="/about" />} />

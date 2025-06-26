@@ -1,0 +1,56 @@
+.type-tooltip {
+  position: relative;
+  cursor: pointer;
+  display: inline-block;
+}
+.type-tooltip .tooltip-content {
+  visibility: hidden;
+  opacity: 0;
+  background: #222;
+  color: #e4e4e4;
+  text-align: center;
+  border-radius: 4px;
+  padding: 4px 8px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* Show above */
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 0.9em;
+  transition: opacity 0.1s;
+  pointer-events: auto;
+  user-select: text;
+}
+.type-tooltip:hover .tooltip-content,
+.type-tooltip:focus .tooltip-content {
+  visibility: visible;
+  opacity: 1;
+  transition-delay: 0s;
+}
+
+.lesson-table {
+  border: 2px solid #f5f5f5; /* Replace with your button color if needed */
+  border-radius: 8px;
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  overflow: hidden;
+}
+.lesson-table th, .lesson-table td {
+  border: none;
+  padding: 5px;
+}
+.lesson-table thead tr {
+  background: #e5e5e5;
+}
+.lesson-table tbody tr:nth-child(odd) {
+  background: #fff;
+}
+.lesson-table tbody tr:nth-child(even) {
+  background: #f5f5f5; /* Replace with your button color if needed */
+  color: var(--text-color, #333);
+}
+.lesson-table tbody tr:nth-child(even) .type-tooltip .tooltip-content {
+  color: var(--text-color, #333);
+}
