@@ -8,6 +8,7 @@ import VideosPage from './routes/VideosPage';
 import LessonsPage from './routes/LessonsPage';
 import LessonPage from './routes/LessonPage';
 import CampaignsPage from './routes/CampaignsPage';
+import AutomationsPage from './routes/AutomationsPage';
 
 function AppHomeContent() {
   return (
@@ -72,6 +73,7 @@ function App() {
           <Route path="lessons" element={<LessonsPage />} />
           <Route path="lessons/:lessonId" element={<LessonPage />} />
           <Route path="campaigns" element={<CampaignsPage />} />
+          <Route path="automations" element={<AutomationsPage />} />
         </Route>
         <Route path="*" element={<Navigate to="/about" />} />
       </Routes>

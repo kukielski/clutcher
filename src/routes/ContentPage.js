@@ -30,6 +30,13 @@ export default function ContentPage() {
                     >
                         Campaigns
                     </button>
+                    <button
+                        type="button"
+                        onClick={() => navigate('automations')}
+                        className={`tab-btn${isActive('automations') ? ' active' : ''}`}
+                    >
+                        Automations
+                    </button>
                 </nav>
                 <Outlet />
             </div>
