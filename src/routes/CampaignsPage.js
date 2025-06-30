@@ -79,6 +79,11 @@ export default function CampaignsPage() {
     fetchAll();
   }, [host, token]);
 
+  // Set the browser tab title
+  useEffect(() => {
+    document.title = "Campaigns";
+  }, []);
+
   if (!host || !token) {
     return <div>Please reload and enter your domain and APP_TOKEN.</div>;
   }

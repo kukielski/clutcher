@@ -93,6 +93,11 @@ export default function AutomationsPage() {
     fetchAll();
   }, [host, token]);
 
+  // Set the browser tab title
+  useEffect(() => {
+    document.title = "Automations";
+  }, []);
+
   if (!host || !token) {
     return <div>Please reload and enter your domain and APP_TOKEN.</div>;
   }

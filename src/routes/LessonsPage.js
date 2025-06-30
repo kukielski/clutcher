@@ -13,6 +13,11 @@ export default function LessonsPage() {
     const [error, setError] = useState(null);
     const [search, setSearch] = useState("");
 
+    // Set the browser tab title
+    useEffect(() => {
+        document.title = "Lessons";
+    }, []);
+
     useEffect(() => {
         if (!host || !token) return;
         async function fetchAll() {
