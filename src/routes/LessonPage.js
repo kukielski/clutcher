@@ -50,7 +50,7 @@ export default function LessonPage() {
     fetchLesson();
   }, [lessonId]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div style={{ margin: "1rem" }}>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   function truncateLabel(label) {

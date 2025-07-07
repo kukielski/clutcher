@@ -5,10 +5,10 @@ import './LessonPage.css';
 const APP_KEY = process.env.REACT_APP_APP_KEY;
 
 export default function AutomationsPage() {
-  const { host, token, updateCreds } = useContext(AuthContext);
+  const { host, token } = useContext(AuthContext);
   const [automations, setAutomations] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [setError] = useState(null);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
@@ -102,33 +102,7 @@ export default function AutomationsPage() {
     return <div>Please reload and enter your domain and APP_TOKEN.</div>;
   }
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return (
-    <div>
-      Error: {error}
-      <button
-        onClick={updateCreds}
-        style={{
-          background: "#2d72d9",
-          color: "#fff",
-          border: "none",
-          borderRadius: "4px",
-          padding: "4px 16px",
-          fontSize: "1rem",
-          fontWeight: 500,
-          cursor: "pointer",
-          height: "32px",
-          lineHeight: "24px",
-          minWidth: "unset",
-          boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
-          display: "inline-block",
-          marginTop: "1rem"
-        }}
-      >
-        Update Domain or Token
-      </button>
-    </div>
-  );
+  if (loading) return <div style={{ margin: "1rem" }}>Loading...</div>;
 
   // Sort and group by teamLabel
   const sortedAutomations = [...automations].sort((a, b) => {
@@ -142,7 +116,8 @@ export default function AutomationsPage() {
   const filteredAutomations = sortedAutomations.filter(
     automation =>
       (automation.name && automation.name.toLowerCase().includes(search.toLowerCase())) ||
-      (automation.teamLabel && automation.teamLabel.toLowerCase().includes(search.toLowerCase()))
+      (automation.teamLabel && automation.teamLabel.toLowerCase().includes(search.toLowerCase())) ||
+      (automation.id && automation.id.toString().toLowerCase().includes(search.toLowerCase()))
   );
 
   const automationsByTeam = {};
@@ -154,37 +129,13 @@ export default function AutomationsPage() {
   });
 
   return (
-    <div>
-      <h2>Automations by Team</h2>
-      <div style={{ marginBottom: "1rem" }}>
-        <button
-          onClick={updateCreds}
-          style={{
-            background: "#2d72d9",
-            color: "#fff",
-            border: "none",
-            borderRadius: "4px",
-            padding: "4px 16px",
-            fontSize: "1rem",
-            fontWeight: 500,
-            cursor: "pointer",
-            height: "32px",
-            lineHeight: "24px",
-            minWidth: "unset",
-            boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
-            display: "inline-block",
-          }}
-        >
-          Update Domain or Token
-        </button>
-      </div>
+    <div style={{ marginTop: "1rem" }}>
       <input
         type="text"
-        placeholder="Search automations or teams..."
+        placeholder="Search name, team, or ID..."
         value={search}
         onChange={e => setSearch(e.target.value)}
         className="search-input"
-        style={{ marginBottom: "1rem" }}
       />
       {Object.entries(automationsByTeam).map(([teamLabel, automations]) => (
         <div key={teamLabel} style={{ marginBottom: "2rem" }}>

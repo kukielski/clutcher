@@ -1,6 +1,6 @@
 :root {
-  --main-color: rgb(0,0,128);
-  --main-color-light: rgba(0, 0, 128, 0.65);
+  --main-color: #005076;
+  --main-color-light: #00517680;
   --secondary-color: rgb(64, 224, 208);
 }
 
@@ -162,7 +162,7 @@ h1.standout {
     left: 50%;
     transform: translateX(-50%);
     z-index: 1001;
-    background: #a11503;         /* Inverted: dark background */
+    background: var(--main-color);         /* Inverted: dark background */
     border: none;
     border-radius: 50%;
     width: 84px;                 /* 56px * 1.5 = 84px */
@@ -203,7 +203,7 @@ h1.standout {
     bottom: 140px;
     left: 50%;
     transform: translateX(-50%);
-    background: #a11503;           /* Inverted: dark background */
+    background: var(--main-color);           /* Inverted: dark background */
     color: #fff;                   /* Inverted: light text */
     border-radius: 20px;           /* Slightly larger radius */
     box-shadow: 0 2.5px 20px rgba(0,0,0,0.18);

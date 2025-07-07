@@ -1,7 +1,7 @@
 :root {
-  --main-color: rgb(0,0,128);
-  --main-color-light: rgba(0, 0, 128, 0.65);
-  --secondary-color: rgb(64, 224, 208);
+  --main-color: #005076;
+  --main-color-light: #00517680;
+  --secondary-color: #40e0d0;
 }
 
 .about-container {
