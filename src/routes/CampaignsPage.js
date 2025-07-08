@@ -77,7 +77,7 @@ export default function CampaignsPage() {
     }
 
     fetchAll();
-  }, [host, token]);
+  }, [host, token, setError]);
 
   // Set the browser tab title
   useEffect(() => {

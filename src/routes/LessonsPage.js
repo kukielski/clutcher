@@ -10,7 +10,7 @@ export default function LessonsPage() {
     const { host, token } = useContext(AuthContext);
     const [lessons, setLessons] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [setError] = useState(null);
+    const [error, setError] = useState(null);
     const [search, setSearch] = useState("");
 
     // Set the browser tab title
@@ -72,19 +72,21 @@ export default function LessonsPage() {
                 setLessons(allLessons);
                 setLoading(false);
             } catch (err) {
-                setError(err.message);
+                setError(err); // This will now work
                 setLoading(false);
             }
         }
 
         fetchAll();
-    }, [host, token]);
+    }, [host, token, setError]);
 
     if (!host || !token) {
         return <div>Please reload and enter your domain and APP_TOKEN.</div>;
     }
 
     if (loading) return <div style={{ margin: "1rem" }}>Loading...</div>;
+
+    if (error) return <div>Error: {error.message}</div>;
 
     const sortedLessons = [...lessons].sort((a, b) => {
         if (a.teamLabel === "No Team" && b.teamLabel !== "No Team") return -1;

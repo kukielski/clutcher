@@ -91,7 +91,7 @@ export default function AutomationsPage() {
     }
 
     fetchAll();
-  }, [host, token]);
+  }, [host, token, setError]);
 
   // Set the browser tab title
   useEffect(() => {
