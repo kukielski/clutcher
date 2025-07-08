@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 import './LessonPage.css';
 
-const HOST = process.env.REACT_APP_HOST;
 const APP_KEY = process.env.REACT_APP_APP_KEY;
-const APP_TOKEN = process.env.REACT_APP_APP_TOKEN;
 
 // Types that should use the question/name/title logic
 const SHOW_LABEL_TYPES = [
@@ -20,9 +19,8 @@ const SHOW_LABEL_TYPES = [
   "checklist"
 ];
 
-
-
 export default function LessonPage() {
+  const { host, token } = useContext(AuthContext);
   const { lessonId } = useParams();
   const [items, setItems] = useState([]);
   const [copiedId, setCopiedId] = useState(null);
@@ -32,10 +30,10 @@ export default function LessonPage() {
   useEffect(() => {
     async function fetchLesson() {
       try {
-        const res = await fetch(`${HOST}/api/lessons/${lessonId}`, {
+        const res = await fetch(`${host}/api/lessons/${lessonId}`, {
           headers: {
             "x-conveyour-appkey": APP_KEY,
-            "x-conveyour-token": APP_TOKEN,
+            "x-conveyour-token": token,
           },
         });
         if (!res.ok) throw new Error("Failed to fetch lesson");
@@ -48,7 +46,7 @@ export default function LessonPage() {
       }
     }
     fetchLesson();
-  }, [lessonId]);
+  }, [lessonId, host, token]);
 
   if (loading) return <div style={{ margin: "1rem" }}>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
