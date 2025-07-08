@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
 import './App.css';
-import logo from './socrateasy.png';
+import logo from './clutcher.png';
 import AboutPage from './routes/AboutPage';
 import ContentPage from './routes/ContentPage';
 import VideosPage from './routes/VideosPage';
