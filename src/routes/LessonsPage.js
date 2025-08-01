@@ -124,7 +124,18 @@ export default function LessonsPage() {
             {Object.entries(lessonsByTeam).map(([teamLabel, lessons]) => (
                 <div key={teamLabel} style={{ marginBottom: "2rem" }}>
                     <h3 style={{ marginBottom: "1rem" , fontSize: "1.35rem" }}>
-                        {teamLabel} {lessons[0].teamId ? `(${lessons[0].teamId})` : ""}
+                        {teamLabel} {lessons[0].teamId ? (
+                            <span>
+                                (<a 
+                                    href={`${host}/settings/teams/${lessons[0].teamId}`} 
+                                    target="_blank" 
+                                    rel="noreferrer"
+                                    style={{ color: "#1bc0af", textDecoration: "none" }}
+                                >
+                                    {lessons[0].teamId}
+                                </a>)
+                            </span>
+                        ) : ""}
                     </h3>
                     <table className="lesson-table">
                         <thead>

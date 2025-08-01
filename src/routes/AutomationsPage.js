@@ -140,7 +140,18 @@ export default function AutomationsPage() {
       {Object.entries(automationsByTeam).map(([teamLabel, automations]) => (
         <div key={teamLabel} style={{ marginBottom: "2rem" }}>
           <h3 style={{ marginBottom: "1rem", fontSize: "1.35rem" }}>
-            {teamLabel} {automations[0].teamId ? `(${automations[0].teamId})` : ""}
+            {teamLabel} {automations[0].teamId ? (
+                            <span>
+                                (<a 
+                                    href={`${host}/settings/teams/${automations[0].teamId}`} 
+                                    target="_blank" 
+                                    rel="noreferrer"
+                                    style={{ color: "#1bc0af", textDecoration: "none" }}
+                                >
+                                    {automations[0].teamId}
+                                </a>)
+                            </span>
+                        ) : ""}
           </h3>
           <table className="lesson-table">
             <thead>
