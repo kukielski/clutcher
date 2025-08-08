@@ -127,17 +127,20 @@ export default function CampaignsPage() {
         <div key={teamLabel} style={{ marginBottom: "2rem" }}>
           <h3 style={{ marginBottom: "1rem", fontSize: "1.35rem" }}>
             {teamLabel} {campaigns[0].teamId ? (
-                            <span>
-                                (<a 
-                                    href={`${host}/settings/teams/${campaigns[0].teamId}`} 
-                                    target="_blank" 
-                                    rel="noreferrer"
-                                    style={{ color: "#1bc0af", textDecoration: "none" }}
-                                >
-                                    {campaigns[0].teamId}
-                                </a>)
-                            </span>
-                        ) : ""}
+              <span>
+                (<a 
+                  href={`${host}/settings/teams/${campaigns[0].teamId}`} 
+                  target="_blank" 
+                  rel="noreferrer"
+                  style={{ color: "#1bc0af", textDecoration: "none" }}
+                >
+                  {campaigns[0].teamId}
+                </a>)
+              </span>
+            ) : ""}
+            <span style={{ color: '#888', fontWeight: 400, marginLeft: '8px', fontSize: '1rem' }}>
+              — {campaigns.length} Campaign{campaigns.length !== 1 ? 's' : ''}
+            </span>
           </h3>
           <table className="lesson-table">
             <thead>
