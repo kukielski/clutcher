@@ -127,7 +127,7 @@ export default function LessonsPage() {
                         {teamLabel} {lessons[0].teamId ? (
                             <span>
                                 (<a 
-                                    href={`${host}/teams/edit/${lessons[0].teamId}`} 
+                                    href={`${host}/settings/teams/${lessons[0].teamId}`} 
                                     target="_blank" 
                                     rel="noreferrer"
                                     style={{ color: "#1bc0af", textDecoration: "none" }}
