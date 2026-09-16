@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, NavLink, Navigate } from 'react-router-dom';
 import './App.css';
-import logo from './clutcher.png';
+import { AuthProvider } from './context/AuthContext';
+import { CacheProvider } from './context/CacheContext';
 import AboutPage from './routes/AboutPage';
+import SettingsPage from './routes/SettingsPage';
 import ContentPage from './routes/ContentPage';
 import VideosPage from './routes/VideosPage';
 import LessonsPage from './routes/LessonsPage';
@@ -10,73 +12,42 @@ import LessonPage from './routes/LessonPage';
 import CampaignsPage from './routes/CampaignsPage';
 import AutomationsPage from './routes/AutomationsPage';
 
-function AppHomeContent() {
-  return (
-    <div className="App-home-content">
-      <img className="App-logo" src={logo} alt="logo" />
-      <h1 className='standout'>Coming Soon!</h1>
-    </div>
-  );
-}
-
 function App() {
-  const location = useLocation();
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  // Helper to check if a route is active (works for subroutes)
-  const isActive = (path) => location.pathname === path || location.pathname.startsWith(path + '/');
-
-  // Hide nav on mobile unless menuOpen is true
-  const navClass = menuOpen ? "App-nav open" : "App-nav";
-
   return (
     <div className="App">
       <header className="App-header">
-        <nav className={navClass}>
-          <ul>
-            <li>
-              <Link
-                to="/about"
-                className={isActive('/about') ? 'nav-link active' : 'nav-link'}
-                onClick={() => setMenuOpen(false)}
-              >
-                About
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/content"
-                className={isActive('/content') ? 'nav-link active' : 'nav-link'}
-                onClick={() => setMenuOpen(false)}
-              >
-                Content
-              </Link>
-            </li>
-          </ul>
+        <NavLink to="/about" className="App-brand">
+          <img src="/clutcher-sq-192.png" alt="" width="32" height="32" />
+          <span>Clutcher</span>
+        </NavLink>
+        <nav className="App-nav" aria-label="Primary">
+          <NavLink to="/about" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>
+            About
+          </NavLink>
+          <NavLink to="/content" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'} end={false}>
+            Content
+          </NavLink>
+          <NavLink to="/settings" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>
+            Settings
+          </NavLink>
         </nav>
-        <button
-          className={`hamburger${menuOpen ? ' open' : ''}`}
-          aria-label="Toggle menu"
-          onClick={() => setMenuOpen((open) => !open)}
-        >
-          <span />
-          <span />
-          <span />
-        </button>
       </header>
-      {location.pathname === '/' && <AppHomeContent />}
-      <Routes>
-        <Route path="/" element={<Navigate to="/about" />} /> {/* Default to About */}
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/videos" element={<VideosPage />} />
-        <Route path="/content" element={<ContentPage />}>
-          <Route path="lessons" element={<LessonsPage />} />
-          <Route path="lessons/:lessonId" element={<LessonPage />} />
-          <Route path="campaigns" element={<CampaignsPage />} />
-          <Route path="automations" element={<AutomationsPage />} />
-        </Route>
-        <Route path="*" element={<Navigate to="/about" />} />
-      </Routes>
+      <main className="App-main">
+        <Routes>
+          <Route path="/" element={<Navigate to="/about" replace />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/videos" element={<VideosPage />} />
+          <Route path="/content" element={<ContentPage />}>
+            <Route index element={<Navigate to="lessons" replace />} />
+            <Route path="lessons" element={<LessonsPage />} />
+            <Route path="lessons/:lessonId" element={<LessonPage />} />
+            <Route path="campaigns" element={<CampaignsPage />} />
+            <Route path="automations" element={<AutomationsPage />} />
+          </Route>
+          <Route path="*" element={<Navigate to="/about" replace />} />
+        </Routes>
+      </main>
     </div>
   );
 }
@@ -84,7 +55,11 @@ function App() {
 export default function AppWithRouter() {
   return (
     <Router>
-      <App />
+      <AuthProvider>
+        <CacheProvider>
+          <App />
+        </CacheProvider>
+      </AuthProvider>
     </Router>
   );
 }

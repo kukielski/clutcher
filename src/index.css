@@ -1,8 +1,35 @@
+:root {
+  --color-primary: #005076;
+  --color-primary-light: #00517680;
+  --color-accent: #1bc0af;
+  --color-bg: #f4f6f8;
+  --color-surface: #ffffff;
+  --color-text: #123041;
+  --color-muted: #5b6b76;
+  --color-border: #e3e8ec;
+  --header-height: 56px;
+  --space: 16px;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(18, 48, 65, 0.08);
+  --touch: 44px;
+  --content-max: 960px;
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: var(--font);
+  background: var(--color-bg);
+  color: var(--color-text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -10,4 +37,15 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+a {
+  color: var(--color-accent);
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
 }

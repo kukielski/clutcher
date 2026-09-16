@@ -1,92 +1,32 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useContext } from 'react';
+import { Link, useOutletContext } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import { useCache } from '../context/CacheContext';
 import './ContentPage.css';
 import './LessonPage.css';
 
-const APP_KEY = process.env.REACT_APP_APP_KEY;
-
 export default function LessonsPage() {
     const { host, token } = useContext(AuthContext);
-    const [lessons, setLessons] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [search, setSearch] = useState("");
+    const { search = "" } = useOutletContext() || {};
+    const { lessons: cached, ensureLoaded } = useCache();
+    const { items: lessons, status, error } = cached;
 
-    // Set the browser tab title
     useEffect(() => {
         document.title = "Lessons";
     }, []);
 
     useEffect(() => {
         if (!host || !token) return;
-        async function fetchAll() {
-            try {
-                const teamsRes = await fetch(`${host}/api/teams`, {
-                    headers: {
-                        "x-conveyour-appkey": APP_KEY,
-                        "x-conveyour-token": token,
-                    },
-                });
-                if (!teamsRes.ok) throw new Error("Failed to fetch teams");
-                const teamsData = await teamsRes.json();
-                const teams = Array.isArray(teamsData.data) ? teamsData.data : [];
-
-                const lessonFetches = [
-                    fetch(`${host}/api/lessons`, {
-                        headers: {
-                            "x-conveyour-appkey": APP_KEY,
-                            "x-conveyour-token": token,
-                        },
-                    }).then(res => res.json()).then(data => ({
-                        teamLabel: "No Team",
-                        teamId: null,
-                        lessons: Array.isArray(data.data) ? data.data : [],
-                    })),
-                    ...teams.map(team => {
-                        return fetch(`${host}/api/lessons?teams=${team.id}`, {
-                            headers: {
-                                "x-conveyour-appkey": APP_KEY,
-                                "x-conveyour-token": token,
-                            },
-                        })
-                            .then(res => res.json())
-                            .then(data => ({
-                                teamLabel: team.label,
-                                teamId: team.id,
-                                lessons: Array.isArray(data.data) ? data.data : [],
-                            }))
-                    }),
-                ];
-
-                const allLessonsByTeam = await Promise.all(lessonFetches);
-
-                const allLessons = allLessonsByTeam.flatMap(({ teamLabel, teamId, lessons }) =>
-                    lessons.map(lesson => ({
-                        ...lesson,
-                        teamLabel,
-                        teamId,
-                    }))
-                );
-
-                setLessons(allLessons);
-                setLoading(false);
-            } catch (err) {
-                setError(err); // This will now work
-                setLoading(false);
-            }
-        }
-
-        fetchAll();
-    }, [host, token, setError]);
+        ensureLoaded("lessons");
+    }, [host, token, ensureLoaded]);
 
     if (!host || !token) {
-        return <div>Please reload and enter your domain and APP_TOKEN.</div>;
+        return <p className="status-msg">Add your domain and API token in <Link to="/settings">Settings</Link> to load this list.</p>;
     }
 
-    if (loading) return <div style={{ margin: "1rem" }}>Loading...</div>;
+    if ((status === "idle" || status === "loading") && lessons.length === 0) return <p className="status-msg">Loading…</p>;
 
-    if (error) return <div>Error: {error.message}</div>;
+    if (error && lessons.length === 0) return <p className="status-msg">Error: {error}</p>;
 
     const sortedLessons = [...lessons].sort((a, b) => {
         if (a.teamLabel === "No Team" && b.teamLabel !== "No Team") return -1;
@@ -103,7 +43,6 @@ export default function LessonsPage() {
             (lesson.id && lesson.id.toString().toLowerCase().includes(search.toLowerCase()))
     );
 
-    // Group lessons by teamLabel
     const lessonsByTeam = {};
     filteredLessons.forEach(lesson => {
         if (!lessonsByTeam[lesson.teamLabel]) {
@@ -113,61 +52,84 @@ export default function LessonsPage() {
     });
 
     return (
-        <div style={{ marginTop: "1rem" }}>
-            <input
-                type="text"
-                placeholder="Search name, team, or ID..."
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                className="search-input"
-            />
-            {Object.entries(lessonsByTeam).map(([teamLabel, lessons]) => (
-                <div key={teamLabel} style={{ marginBottom: "2rem" }}>
-                    <h3 style={{ marginBottom: "1rem" , fontSize: "1.35rem" }}>
-                        {teamLabel} {lessons[0].teamId ? (
-                            <span>
-                                (<a 
-                                    href={`${host}/settings/teams/${lessons[0].teamId}`} 
-                                    target="_blank" 
-                                    rel="noreferrer"
-                                    style={{ color: "#1bc0af", textDecoration: "none" }}
-                                >
-                                    {lessons[0].teamId}
-                                </a>)
+        <div className="list-page">
+            {filteredLessons.length === 0 ? (
+                <p className="empty-state">No lessons match your search.</p>
+            ) : (
+                Object.entries(lessonsByTeam).map(([teamLabel, teamLessons]) => (
+                    <section key={teamLabel} className="team-section">
+                        <h3 className="team-heading">
+                            {teamLabel}
+                            {teamLessons[0].teamId ? (
+                                <span>
+                                    (<a
+                                        href={`${host}/settings/teams/${teamLessons[0].teamId}`}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                    >
+                                        {teamLessons[0].teamId}
+                                    </a>)
+                                </span>
+                            ) : null}
+                            <span className="team-count">
+                                — {teamLessons.length} Lesson{teamLessons.length !== 1 ? 's' : ''}
                             </span>
-                        ) : ""}
-                        <span style={{ color: '#888', fontWeight: 400, marginLeft: '8px', fontSize: '1rem' }}>
-                            — {lessons.length} Lesson{lessons.length !== 1 ? 's' : ''}
-                        </span>
-                    </h3>
-                    <table className="lesson-table">
-                        <thead>
-                            <tr>
-                                <th style={{ paddingRight: "10px" }}>LESSON NAME</th>
-                                <th style={{ paddingLeft: "10px", textAlign: "left" }}>LESSON ID</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {lessons.map((lesson, idx) => (
-                                <tr key={`${lesson.teamId || "no-team"}-${lesson.uuid || idx}`}>
-                                    <td>
-                                        <Link to={`/content/lessons/${lesson.id}`}>{lesson.name}</Link>
-                                    </td>
-                                    <td>
-                                        <a
-                                            href={`${host}/lessons/edit/${lesson.id}`}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                        >
-                                            {lesson.id}
-                                        </a>
-                                    </td>
+                        </h3>
+                        <table className="lesson-table item-table">
+                            <thead>
+                                <tr>
+                                    <th>Lesson name</th>
+                                    <th>Lesson ID</th>
                                 </tr>
+                            </thead>
+                            <tbody>
+                                {teamLessons.map((lesson, idx) => (
+                                    <tr key={`${lesson.teamId || "no-team"}-${lesson.uuid || idx}`}>
+                                        <td>
+                                            <Link to={`/content/lessons/${lesson.id}`}>{lesson.name}</Link>
+                                        </td>
+                                        <td>
+                                            <a
+                                                href={`${host}/lessons/edit/${lesson.id}`}
+                                                target="_blank"
+                                                rel="noreferrer"
+                                            >
+                                                {lesson.id}
+                                            </a>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                        <div className="item-cards">
+                            {teamLessons.map((lesson, idx) => (
+                                <article
+                                    key={`${lesson.teamId || "no-team"}-${lesson.uuid || idx}`}
+                                    className="item-card"
+                                >
+                                    <Link className="item-card-title" to={`/content/lessons/${lesson.id}`}>
+                                        {lesson.name}
+                                    </Link>
+                                    <dl className="item-card-meta">
+                                        <div>
+                                            <dt>ID</dt>
+                                            <dd>
+                                                <a
+                                                    href={`${host}/lessons/edit/${lesson.id}`}
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                >
+                                                    {lesson.id}
+                                                </a>
+                                            </dd>
+                                        </div>
+                                    </dl>
+                                </article>
                             ))}
-                        </tbody>
-                    </table>
-                </div>
-            ))}
+                        </div>
+                    </section>
+                ))
+            )}
         </div>
     );
 }

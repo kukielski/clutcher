@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import './LessonPage.css';
 
@@ -28,6 +28,9 @@ export default function LessonPage() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    if (!host || !token) return;
+    setLoading(true);
+    setError(null);
     async function fetchLesson() {
       try {
         const res = await fetch(`${host}/api/lessons/${lessonId}`, {
@@ -48,8 +51,12 @@ export default function LessonPage() {
     fetchLesson();
   }, [lessonId, host, token]);
 
-  if (loading) return <div style={{ margin: "1rem" }}>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (!host || !token) {
+    return <p className="status-msg">Add your domain and API token in <Link to="/settings">Settings</Link> to load this list.</p>;
+  }
+
+  if (loading) return <p className="status-msg">Loading…</p>;
+  if (error) return <p className="status-msg">Error: {error}</p>;
 
   function truncateLabel(label) {
     if (typeof label !== 'string') return label;
@@ -176,25 +183,25 @@ export default function LessonPage() {
   };
 
   return (
-    <div>
-      <h2>Lesson Details</h2>
-      <p>Lesson ID: {lessonId}</p>
-      <table className="lesson-table">
+    <div className="list-page">
+      <Link to="/content/lessons" className="back-link">← All lessons</Link>
+      <h2 className="detail-heading">Lesson details</h2>
+      <p className="detail-sub">Lesson ID: {lessonId}</p>
+      <table className="lesson-table item-table">
         <thead>
           <tr>
-            <th style={{ paddingRight: "10px" }}>TYPE</th>
-            <th style={{ paddingLeft: "10px", textAlign: "left" }}>LESSON ITEM</th>
+            <th>Type</th>
+            <th>Lesson item</th>
           </tr>
         </thead>
         <tbody>
           {items.map(item => (
             <tr key={item.uuid}>
-              <td style={{ paddingRight: "10px" }}>
+              <td>
                 <span
                   className="type-tooltip"
                   tabIndex={0}
                   onClick={() => handleTypeClick(item.uuid)}
-                  style={{ cursor: "pointer" }}
                 >
                   {item.type}
                   <span className="tooltip-content">
@@ -202,11 +209,26 @@ export default function LessonPage() {
                   </span>
                 </span>
               </td>
-              <td style={{ paddingLeft: "10px", textAlign: "left" }}>{getLabel(item)}</td>
+              <td>{getLabel(item)}</td>
             </tr>
           ))}
         </tbody>
       </table>
+      <div className="item-cards">
+        {items.map(item => (
+          <article key={item.uuid} className="item-card">
+            <button
+              type="button"
+              className="type-chip"
+              onClick={() => handleTypeClick(item.uuid)}
+            >
+              {item.type}
+              {copiedId === item.uuid ? " · copied" : ""}
+            </button>
+            <div className="item-card-title">{getLabel(item)}</div>
+          </article>
+        ))}
+      </div>
     </div>
   );
 }

@@ -1,21 +1,39 @@
-:root {
-  --main-color: #005076;
-  --main-color-light: #00517680;
-  --secondary-color: #40e0d0;
-}
-
 .about-container {
-  max-width: 480px; /* Match this to your nav's width */
-  margin: 0 auto 50vh auto;
-  padding: 0;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 0 24px;
+}
+
+.about-logo {
+  width: 72px;
+  height: 72px;
+  border-radius: 16px;
+  margin-bottom: 8px;
+}
+
+.about-container h1 {
+  margin: 0;
+  color: var(--color-primary);
+  font-size: 1.75rem;
 }
 
 .about-description {
-  margin: 0 auto;
-  padding: 0;
-  text-align: center;
-  font-size: 1.5em;
+  margin: 0;
+  max-width: 40rem;
+  color: var(--color-muted);
+  font-size: 1.05rem;
+  line-height: 1.55;
+  text-align: left;
+}
+
+@media (min-width: 768px) {
+  .about-container {
+    padding-top: 16px;
+  }
+
+  .about-container h1 {
+    font-size: 2rem;
+  }
 }
